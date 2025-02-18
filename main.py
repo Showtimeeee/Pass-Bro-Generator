@@ -1,4 +1,3 @@
-# main.py
 import customtkinter as ctk
 from password_generator import generate_password
 import json
@@ -7,40 +6,41 @@ import pyperclip
 from storage_window import show_storage
 
 def main():
-    # Инициализация главного окна
+    # тема оформления
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("blue")
 
+    # главное окно приложения
     root = ctk.CTk()
     root.title("Генератор паролей")
 
-    # Получаем размеры экрана
+    # получаем размеры экрана
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
 
-    # Устанавливаем размер окна
+    # размер окна
     window_width = 420
     window_height = 500
 
-    # Вычисляем координаты для центрирования окна
+    # координаты для центрирования окна
     x = (screen_width - window_width) // 2
     y = (screen_height - window_height) // 2
 
-    # Устанавливаем геометрию окна
+    # устанавливаем геометрию окна
     root.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-    # Конфигурация layout
+    # контейнер для виджета
     frame = ctk.CTkFrame(master=root)
     frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-    # Ввод длины пароля
+    # ввод длины пароля
     length_label = ctk.CTkLabel(master=frame, text="Длина пароля:")
     length_label.grid(row=0, column=0, pady=10, padx=10)
     length_entry = ctk.CTkEntry(master=frame)
     length_entry.grid(row=0, column=1, pady=10, padx=10)
     length_entry.insert(0, "14")
 
-    # Обработка Ctrl + V для вставки текста в поле длины пароля
+    # обработка Ctrl + V для вставки текста в поле длины пароля
     def paste_length(event=None):
         try:
             text = root.clipboard_get()
@@ -50,7 +50,7 @@ def main():
 
     length_entry.bind("<Control-v>", paste_length)
 
-    # Чекбоксы для опций пароля
+    # чекбоксы для опций пароля
     uppercase_var = ctk.BooleanVar(value=True)
     digits_var = ctk.BooleanVar(value=True)
     special_var = ctk.BooleanVar(value=True)
