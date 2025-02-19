@@ -62,8 +62,8 @@ jobs:
       - name: List files
         run: ls -la tests
 
-      - name: Upload test results
+      - name: Upload test results with unique name
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-results-final-${{ github.run_id }}
           path: tests/result.log
