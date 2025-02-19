@@ -38,6 +38,6 @@ jobs:
 
     - name: Run tests
       run: |
-        python -m unittest discover -s tests  # Запускаем unittests из директории tests
+        python -m unittest discover -s tests -v
     
     needs: build  
