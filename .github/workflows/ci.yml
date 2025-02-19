@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt  
 
   test:
     runs-on: ubuntu-latest  
@@ -36,43 +36,37 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Run tests and generate report
+      - name: Run tests
         run: |
-          # Запуск тестов и сохранение вывода в файл
-          python -m unittest discover -s tests -v > test-output.log 2>&1 || true
+          python -m unittest discover -s tests -v 2>&1 | tee tests/result.log
 
-          # Создание Markdown-отчёта
-          echo "# Test Results" > report.md
-          echo "## Test Output" >> report.md
-          echo '```' >> report.md
-          cat test-output.log >> report.md
-          echo '```' >> report.md
+      - name: Check result.log content
+        run: cat tests/result.log
 
-      - name: Upload test report as artifact
+      - name: Upload test results as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: test-report
-          path: report.md
+          name: test-results
+          path: tests/result.log
 
     needs: build  
 
-  publish:
+  artifacts:
     runs-on: ubuntu-latest  
     needs: test  
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Download test report
+      - name: Download test results
         uses: actions/download-artifact@v4
         with:
-          name: test-report
-          path: ./report
+          name: test-results
+          path: tests/
 
-      - name: Set up GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: List files
+        run: ls -la tests
+
+      - name: Upload test results with unique name
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./report
-          keep_files: false
+          name: test-results-final-${{ github.run_id }}
+          path: tests/result.log
