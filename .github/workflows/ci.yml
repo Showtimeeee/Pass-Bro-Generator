@@ -40,6 +40,12 @@ jobs:
         run: |
           python -m unittest discover -s tests -v > tests/result.log || true
 
+      - name: Upload test results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: tests/result.log
+
     needs: build  
 
   artifacts:
@@ -47,8 +53,11 @@ jobs:
     needs: test  
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: tests/
 
       - name: List files
         run: ls -la tests
