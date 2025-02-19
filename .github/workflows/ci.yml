@@ -38,7 +38,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m unittest discover -s tests -v > result.log || true  # Сохраняем вывод в файл
+          python -m unittest discover -s tests -v > tests/result.log || true
 
     needs: build  
 
@@ -50,8 +50,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List files
+        run: ls -la tests
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: result.log  
+          path: tests/result.log
